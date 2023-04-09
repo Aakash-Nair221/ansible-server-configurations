@@ -1,0 +1,26 @@
+---
+- name: Install Node Exporter on webservers
+  hosts: servers
+  become: true
+  tasks:
+  - name: Create user for node exporter
+    user:
+      name: node_exporter
+      shell: /usr/sbin/nologin
+      system: true
+  - name: Install Prometheus Node Exporter
+    apt: 
+      name: prometheus-node-exporter
+      state: present 
+  - name: Start Node Exporter service
+    command: sudo systemctl start prometheus-node-exporter
+  - name: Check Node Exporter service status
+    command: sudo systemctl status prometheus-node-exporter
+  - name: Install Prometheus
+    apt:
+      name: prometheus
+      state: present
+  - name: Reload Prometheus configuration
+    command: sudo systemctl reload prometheus
+  - name: Check Prometheus status
+    command: sudo systemctl status prometheus
